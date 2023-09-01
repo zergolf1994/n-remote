@@ -14,8 +14,8 @@ exports.serverCreate = async (req, res) => {
 
     let dataCreate = {
       type: "remote",
-      ipV4: "default",
-      ipName: ipV4,
+      svIp: ipV4,
+      svName: hostname,
       isWork: false,
     };
 
