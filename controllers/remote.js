@@ -64,7 +64,7 @@ exports.PreStart = async (req, res) => {
     }
   } catch (err) {
     console.log(err);
-    return res.json({ error: true });
+    return res.json({ error: true ,msg:"PreStart"});
   }
 };
 
@@ -134,7 +134,7 @@ exports.DataRemote = async (req, res) => {
     return res.json(data);
   } catch (err) {
     console.log(err);
-    return res.json({ error: true });
+    return res.json({ error: true  ,msg:"DataRemote"});
   }
 };
 exports.ConvertToMp4 = async (req, res) => {
@@ -194,7 +194,7 @@ exports.ConvertToMp4 = async (req, res) => {
     return res.json(data);
   } catch (err) {
     console.log(err);
-    return res.json({ error: true });
+    return res.json({ error: true ,msg:"ConvertToMp4" });
   }
 };
 exports.UploadToStorage = async (req, res) => {
@@ -330,6 +330,6 @@ exports.UploadToStorage = async (req, res) => {
     }
   } catch (err) {
     console.log(err);
-    return res.json({ error: true });
+    return res.json({ error: true,msg:"UploadToStorage" });
   }
 };
