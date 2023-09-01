@@ -37,17 +37,17 @@ exports.serverReload = async (req, res) => {
   try {
     let { ipV4, hostname } = getOs();
 
-    const server = await Server.List.findOne({
+    const row = await Server.List.findOne({
       svIp: ipV4,
     }).select(`_id svIp`);
 
-    if (!server?._id) return res.json({ error: true, msg: `ไม่พบเซิฟเวอร์` });
+    if (!row?._id) return res.json({ error: true, msg: `ไม่พบเซิฟเวอร์` });
 
     await Server.List.findByIdAndUpdate(
-      { _id: row?.serverId },
+      { _id: row?._id },
       { isWork: false, active: true }
     );
-    await File.Process.deleteOne({ _id: server?._id });
+    await File.Process.deleteOne({ serverId: row?._id });
 
     shell.exec(
       `sudo bash ${global.dir}/shell/reload.sh ${global.dir}`,
@@ -72,12 +72,9 @@ exports.serverReloaded = async (req, res) => {
       svIp: ipV4,
     }).select(`_id svIp`);
 
-    if (!server?._id) return res.json({ error: true, msg: `ไม่พบเซิฟเวอร์` });
+    if (!row?._id) return res.json({ error: true, msg: `ไม่พบเซิฟเวอร์` });
 
-    await Server.List.findByIdAndUpdate(
-      { _id: row?.serverId },
-      { active: true }
-    );
+    await Server.List.findByIdAndUpdate({ _id: row?._id }, { active: true });
 
     return res.json({
       msg: `รีโหลด ${hostname} สำเร็จ`,
