@@ -1,5 +1,6 @@
 const { Server, File } = require("../models");
 const { getOs } = require("../utils");
+const shell = require("shelljs");
 
 exports.serverCreate = async (req, res) => {
   try {
@@ -45,7 +46,7 @@ exports.serverReload = async (req, res) => {
 
     await Server.List.findByIdAndUpdate(
       { _id: row?._id },
-      { isWork: false, active: true }
+      { isWork: false, active: false }
     );
     await File.Process.deleteOne({ serverId: row?._id });
 
@@ -68,7 +69,7 @@ exports.serverReloaded = async (req, res) => {
   try {
     let { ipV4, hostname } = getOs();
 
-    const server = await Server.List.findOne({
+    const row = await Server.List.findOne({
       svIp: ipV4,
     }).select(`_id svIp`);
 
