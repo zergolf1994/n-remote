@@ -1,8 +1,7 @@
 const { Server } = require("../models");
 
-exports.Create = async (req, res) => {
+exports.serverCreate = async (req, res) => {
   try {
-    const { fileId } = req.query;
     let { ipV4, hostname } = getOs();
 
     const server = await Server.List.findOne({
