@@ -1,4 +1,4 @@
-const { Server } = require("../models");
+const { Server, File } = require("../models");
 const { getOs } = require("../utils");
 
 exports.serverCreate = async (req, res) => {
