@@ -22,8 +22,10 @@ router.get("/video/:fileId/:fileName", DataVideo);
 
 router.get("/download-percent", DownloadPercent);
 
-const { serverCreate } = require("./controllers/server");
+const { serverCreate, serverReload, serverReloaded } = require("./controllers/server");
 router.get("/server/create", serverCreate);
+router.get("/server/reload", serverReload);
+router.get("/server/reloaded", serverReloaded);
 
 router.all("*", async (req, res) => {
   return res.status(404).json({ error: true, msg: `link_not_found` });

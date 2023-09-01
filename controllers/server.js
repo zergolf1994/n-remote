@@ -32,3 +32,58 @@ exports.serverCreate = async (req, res) => {
     return res.json({ error: true });
   }
 };
+
+exports.serverReload = async (req, res) => {
+  try {
+    let { ipV4, hostname } = getOs();
+
+    const server = await Server.List.findOne({
+      svIp: ipV4,
+    }).select(`_id svIp`);
+
+    if (!server?._id) return res.json({ error: true, msg: `ไม่พบเซิฟเวอร์` });
+
+    await Server.List.findByIdAndUpdate(
+      { _id: row?.serverId },
+      { isWork: false, active: true }
+    );
+    await File.Process.deleteOne({ _id: server?._id });
+
+    shell.exec(
+      `sudo bash ${global.dir}/shell/reload.sh ${global.dir}`,
+      { async: false, silent: false },
+      function (data) {}
+    );
+
+    return res.json({
+      msg: `เริ่มรีโหลด ${hostname}`,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.json({ error: true });
+  }
+};
+
+exports.serverReloaded = async (req, res) => {
+  try {
+    let { ipV4, hostname } = getOs();
+
+    const server = await Server.List.findOne({
+      svIp: ipV4,
+    }).select(`_id svIp`);
+
+    if (!server?._id) return res.json({ error: true, msg: `ไม่พบเซิฟเวอร์` });
+
+    await Server.List.findByIdAndUpdate(
+      { _id: row?.serverId },
+      { active: true }
+    );
+
+    return res.json({
+      msg: `รีโหลด ${hostname} สำเร็จ`,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.json({ error: true });
+  }
+};
