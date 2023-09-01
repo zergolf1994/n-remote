@@ -1,12 +1,12 @@
 {
-  "name": "zembed_admin_api",
+  "name": "n_remote",
   "version": "2.0.1",
   "description": "",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon server.js",
-    "pm2": "pm2 start cluster.js --name=zembed_admin_api"
+    "pm2": "pm2 start cluster.js --name=n_remote"
   },
   "author": "",
   "license": "ISC",
