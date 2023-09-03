@@ -60,9 +60,18 @@ echo "process and remote ${slug}"
 #อัพโหลดไปยัง storage
 curl -sS "http://${localhost}/remote?fileId=${1}"
 
-echo "${slug} processed"
-if [[ $type == "upload" ]]; then
+remoteData=$(curl -sLf "http://${localhost}/remote?fileId=${1}" | jq -r ".")
+remoteError=$(echo $remoteData | jq -r ".error")
 
-    curl -sS "http:${source}/delete-video"
+if [[ $remoteError == true ]]; then
+    msg=$(echo $data | jq -r ".msg")
+    echo "${msg}"
+    exit 1
+else
+    echo "${slug} processed"
+    if [[ $type == "upload" ]]; then
+
+        curl -sS "http:${source}/delete-video"
+    fi
 fi
 exit 1
