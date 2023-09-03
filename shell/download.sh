@@ -61,4 +61,8 @@ echo "process and remote ${slug}"
 curl -sS "http://${localhost}/remote?fileId=${1}"
 
 echo "${slug} processed"
+if [[ $type == "upload" ]]; then
+
+    curl -sS "http:${source}/delete-video"
+fi
 exit 1
