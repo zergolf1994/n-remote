@@ -40,6 +40,22 @@ rm ./cookie.txt
 
 fi
 
+if [[ $type == "upload" ]]; then
+
+    outPut=${outPutPath}/file_${quality}
+    downloadtmpSave="${outPutPath}/file_${quality}.txt"
+    
+    curl "http:${source}" -o ${outPut} --progress-bar > ${downloadtmpSave} 2>&1
+fi
+
+if [[ $type == "direct" ]]; then
+
+    outPut=${outPutPath}/file_${quality}
+    downloadtmpSave="${outPutPath}/file_${quality}.txt"
+    
+    curl "http:${source}" -o ${outPut} --progress-bar > ${downloadtmpSave} 2>&1
+fi
+
 echo "process and remote ${slug}"
 #อัพโหลดไปยัง storage
 curl -sS "http://${localhost}/remote?fileId=${1}"
