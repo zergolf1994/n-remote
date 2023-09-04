@@ -3,15 +3,11 @@ if [[ ! ${1} ]]; then
     exit 1
 fi
 
-sleep 10
+sleep 1
 
 root_dir=${1}
 localhost="127.0.0.1"
 
-rm -rf "${root_dir}/public/*"
+sudo rm -rf $root_dir/public/*
 
 pm2 restart all
-
-sleep 2
-
-curl -sS "http://${localhost}/server/reloaded"

@@ -46,7 +46,7 @@ exports.serverReload = async (req, res) => {
 
     await Server.List.findByIdAndUpdate(
       { _id: row?._id },
-      { isWork: false, active: false }
+      { isWork: false, active: true }
     );
     await File.Process.deleteOne({ serverId: row?._id });
 
