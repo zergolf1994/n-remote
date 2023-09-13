@@ -303,6 +303,7 @@ exports.UploadToStorage = async (req, res) => {
         (stream) => stream.codec_type === "video"
       );
       let dataUpdate = {};
+      dataUpdate.duration = Math.floor(format?.duration);
       dataUpdate.size = format?.size;
       dataUpdate.dimention = `${videoStream?.width}X${videoStream?.height}`;
       await File.List.findByIdAndUpdate(
