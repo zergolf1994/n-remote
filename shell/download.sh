@@ -22,36 +22,36 @@ root_dir=$(echo $data | jq -r ".root_dir")
 
 sudo bash ${root_dir}/shell/updatePercent.sh ${slug} > /dev/null &
 
-if [[ $type == "gdrive" ]]; then
+outPut=${outPutPath}/file_${quality}
+downloadtmpSave="${outPutPath}/file_${quality}.txt"
+if [[ -f "$outPut" ]]; then
+    rm -rf ${outPut}
+fi
 
-    outPut=${outPutPath}/file_${quality}
-    downloadtmpSave="${outPutPath}/file_${quality}.txt"
+if [[ -f "$downloadtmpSave" ]]; then
+    rm -rf ${downloadtmpSave}
+fi
+
+if [[ $type == "gdrive" ]]; then
 
     #gdown "${source}" -O "${outPut}"  >> "${downloadtmpSave}" 2>&1
     # ดาวน์โหลดหน้าแรกและบันทึกไว้ใน cookie.txt
-curl -c ./cookie.txt -s -L "https://drive.google.com/uc?export=download&id=${source}" > /dev/null
+    curl -c ./cookie.txt -s -L "https://drive.google.com/uc?export=download&id=${source}" > /dev/null
 
+    # ดาวน์โหลดไฟล์จริงๆ โดยระบุความคืบหน้าและบันทึกลงใน ${filename}
+    curl -Lb ./cookie.txt "https://drive.google.com/uc?export=download&confirm=$(awk '/download/ {print $NF}' ./cookie.txt)&id=${source}" -o ${outPut} --progress-bar > ${downloadtmpSave} 2>&1
 
-# ดาวน์โหลดไฟล์จริงๆ โดยระบุความคืบหน้าและบันทึกลงใน ${filename}
-curl -Lb ./cookie.txt "https://drive.google.com/uc?export=download&confirm=$(awk '/download/ {print $NF}' ./cookie.txt)&id=${source}" -o ${outPut} --progress-bar > ${downloadtmpSave} 2>&1
-
-# ลบไฟล์ cookie.txt เนื่องจากไม่ได้ใช้แล้ว
-rm ./cookie.txt
+    # ลบไฟล์ cookie.txt เนื่องจากไม่ได้ใช้แล้ว
+    rm ./cookie.txt
 
 fi
 
 if [[ $type == "upload" ]]; then
-
-    outPut=${outPutPath}/file_${quality}
-    downloadtmpSave="${outPutPath}/file_${quality}.txt"
     
     curl "${source}" -o ${outPut} --progress-bar > ${downloadtmpSave} 2>&1
 fi
 
 if [[ $type == "direct" ]]; then
-
-    outPut=${outPutPath}/file_${quality}
-    downloadtmpSave="${outPutPath}/file_${quality}.txt"
     
     curl "${source}" -o ${outPut} --progress-bar > ${downloadtmpSave} 2>&1
 fi

@@ -15,7 +15,7 @@ exports.GetData = async (video) => {
     });
   } catch (error) {
     //console.error(error);
-    return { error: true };
+    return { error: true, msg: "GetData" };
   }
 };
 
@@ -27,6 +27,7 @@ exports.ConvertDefault = async ({ row }) => {
 
     let video_data = await this.GetData(path.join(inputPath, inputFile));
     const streams = video_data?.streams;
+    
     const videoStream = streams.find((stream) => stream.codec_type === "video");
     if (!videoStream) {
       return res.json({ error: true, msg: "ไม่พบสตรีมวิดีโอในไฟล์" });
@@ -81,6 +82,6 @@ exports.ConvertDefault = async ({ row }) => {
     });
   } catch (error) {
     //console.error(error);
-    return { error: true };
+    return { error: true, msg: "ConvertDefault" };
   }
 };

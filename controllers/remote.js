@@ -277,6 +277,8 @@ exports.UploadToStorage = async (req, res) => {
     });
     if (resp?.error) {
       //สร้างคิวเพื่อเช็ค
+      await useCurl.get(`http://127.0.0.1/server/reload`);
+
       return res.json(resp);
     }
     //สร้าง file_data
