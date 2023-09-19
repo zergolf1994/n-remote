@@ -65,4 +65,19 @@ const Process = mongoose.model(
   )
 );
 
-module.exports = File = { List, Data, Process };
+const Lock = mongoose.model(
+  "file_lock",
+  new Schema(
+    {
+      _id: { type: String, default: () => uuid.v4() },
+      fileId: { type: String, required: true },
+      userId: { type: String, required: true },
+      msg: { type: String },
+    },
+    {
+      timestamps: true,
+    }
+  )
+);
+
+module.exports = File = { List, Data, Process, Lock };

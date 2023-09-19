@@ -252,6 +252,14 @@ exports.UploadToStorage = async (req, res) => {
 
     const convert = await Ffmpeg.ConvertDefault({ row });
     if (convert?.error) {
+      await File.Lock.create({
+        msg: "convertError",
+        userId: row?.userId,
+        fileId: row?.fileId,
+      });
+
+      console.log("call reload");
+      await useCurl.get(`http://127.0.0.1/server/reload`);
       return res.json(convert);
     }
     //ข้อมูล storage
@@ -277,7 +285,12 @@ exports.UploadToStorage = async (req, res) => {
     });
     if (resp?.error) {
       //สร้างคิวเพื่อเช็ค
-      console.log("call reload")
+      await File.Lock.create({
+        msg: "upStorageError",
+        userId: row?.userId,
+        fileId: row?.fileId,
+      });
+      console.log("call reload");
       await useCurl.get(`http://127.0.0.1/server/reload`);
 
       return res.json(resp);
