@@ -33,16 +33,23 @@ if [[ -f "$downloadtmpSave" ]]; then
 fi
 
 if [[ $type == "gdrive" ]]; then
+    accessToken=$(echo $data | jq -r ".accessToken")
+    echo "$accessToken"
+    if [[ $accessToken != "null" ]]; then
+        echo "download with accessToken"
+        curl -H "Authorization: Bearer ${accessToken}" -C - https://www.googleapis.com/drive/v3/files/${source}?alt=media -o ${outPut}  --progress-bar > ${downloadtmpSave} 2>&1
+    else
+        echo "download withount accessToken"
+        #gdown "${source}" -O "${outPut}"  >> "${downloadtmpSave}" 2>&1
+        # ดาวน์โหลดหน้าแรกและบันทึกไว้ใน cookie.txt
+        curl -c ./cookie.txt -s -L "https://drive.google.com/uc?export=download&id=${source}" > /dev/null
 
-    #gdown "${source}" -O "${outPut}"  >> "${downloadtmpSave}" 2>&1
-    # ดาวน์โหลดหน้าแรกและบันทึกไว้ใน cookie.txt
-    curl -c ./cookie.txt -s -L "https://drive.google.com/uc?export=download&id=${source}" > /dev/null
+        # ดาวน์โหลดไฟล์จริงๆ โดยระบุความคืบหน้าและบันทึกลงใน ${filename}
+        curl -Lb ./cookie.txt "https://drive.google.com/uc?export=download&confirm=$(awk '/download/ {print $NF}' ./cookie.txt)&id=${source}" -o ${outPut} --progress-bar > ${downloadtmpSave} 2>&1
 
-    # ดาวน์โหลดไฟล์จริงๆ โดยระบุความคืบหน้าและบันทึกลงใน ${filename}
-    curl -Lb ./cookie.txt "https://drive.google.com/uc?export=download&confirm=$(awk '/download/ {print $NF}' ./cookie.txt)&id=${source}" -o ${outPut} --progress-bar > ${downloadtmpSave} 2>&1
-
-    # ลบไฟล์ cookie.txt เนื่องจากไม่ได้ใช้แล้ว
-    rm ./cookie.txt
+        # ลบไฟล์ cookie.txt เนื่องจากไม่ได้ใช้แล้ว
+        rm ./cookie.txt
+    fi
 
 fi
 

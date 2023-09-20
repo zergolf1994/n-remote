@@ -1,7 +1,7 @@
 "use strict";
 
 const { File, Server } = require("../models");
-const { getOs, Scp, Ffmpeg, useCurl } = require("../utils");
+const { getOs, Scp, Ffmpeg, useCurl, Google } = require("../utils");
 const fs = require("fs-extra");
 const shell = require("shelljs");
 const path = require("path");
@@ -125,11 +125,17 @@ exports.DataRemote = async (req, res) => {
     if (!fs.existsSync(outPutPath)) {
       fs.mkdirSync(outPutPath, { recursive: true });
     }
+
     let data = {
       ...row,
       outPutPath,
       root_dir: global.dir,
     };
+
+    if (row?.type == "gdrive") {
+      const AuthOne = await Google.AuthOneRand({ userId: row?.userId });
+      data.accessToken = AuthOne?.access_token || undefined;
+    }
 
     return res.json(data);
   } catch (err) {
