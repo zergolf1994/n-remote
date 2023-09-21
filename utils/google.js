@@ -97,7 +97,7 @@ exports.AuthOneRand = async ({ userId }) => {
         { $sample: { size: 1 } }, // สุ่มเลือก 1 เรคคอร์ด
       ];
       const randomRecord = await GAuth.aggregate(pipeline);
-      if (randomRecord[1]) row = randomRecord[1];
+      if (randomRecord[0]) row = randomRecord[0];
     } else if (count > 0) {
       //มี 1
       row = await GAuth.findOne({ userId, active: true });
@@ -108,7 +108,7 @@ exports.AuthOneRand = async ({ userId }) => {
         { $sample: { size: 1 } }, // สุ่มเลือก 1 เรคคอร์ด
       ];
       const randomRecord = await GAuth.aggregate(pipeline);
-      if (randomRecord[1]) row = randomRecord[1];
+      if (randomRecord[0]) row = randomRecord[0];
     }
     if (!row) return;
     //อัพเดต
